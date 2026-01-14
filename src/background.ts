@@ -122,10 +122,10 @@ chrome.cookies.onChanged.addListener(_.debounce(async () => {
 }, DEBOUNCE_DELAY));
 
 function badge(text: string, color: string = 'red', delay: number = 10000) {
-  chrome.browserAction.setBadgeText({text});
-  chrome.browserAction.setBadgeBackgroundColor({color});
+  chrome.action.setBadgeText({text});
+  chrome.action.setBadgeBackgroundColor({color});
   setTimeout(() => {
-    chrome.browserAction.setBadgeText({text: ''});
+    chrome.action.setBadgeText({text: ''});
   }, delay);
 }
 
