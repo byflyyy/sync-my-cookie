@@ -34,6 +34,13 @@ function create(file) {
       chunkFilename: '[name].[contenthash:8].chunk.css',
     }));
   }
+  const alias = {
+    '@ant-design/icons/lib/dist$': path.resolve(__dirname, './src/icons.ts'),
+  };
+  // Service worker doesn't support XMLHttpRequest, use fetch adapter instead
+  if (name === 'background') {
+    alias['./adapters/xhr'] = path.resolve(__dirname, './src/adapters/fetch-adapter.js');
+  }
   return {
     mode: isProduction ? 'production' : 'development',
     entry: file,
@@ -43,9 +50,7 @@ function create(file) {
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
-      alias: {
-        '@ant-design/icons/lib/dist$': path.resolve(__dirname, './src/icons.ts'),
-      },
+      alias,
     },
     module: {
       rules: [
