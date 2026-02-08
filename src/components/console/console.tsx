@@ -123,15 +123,17 @@ class Console extends Component<Prop, State> {
     }
   }
 
-  public async componentWillReceiveProps(nextProps: Prop) {
-    const config = await auto.get(nextProps.domain);
-    this.setState({...config});
+  public async componentDidUpdate(prevProps: Prop) {
+    if (prevProps.domain !== this.props.domain) {
+      const config = await auto.get(this.props.domain);
+      this.setState({...config});
+    }
   }
 
   private handleAutoPushConfigClick = async () => {
     const cookies = await gist.getCookies(this.props.domain);
     const options = _.uniq(cookies.map((cookie) => cookie.name as string)).map((name) => {
-      return <Select.Option key={name}>{name}</Select.Option>;
+      return <Select.Option key={name} value={name}>{name}</Select.Option>;
     });
     this.setState({
       configuring: true,

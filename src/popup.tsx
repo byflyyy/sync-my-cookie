@@ -63,24 +63,23 @@ class Popup extends Component<{}, State> {
   }
 
   private handleDomainClose = (domain: string) => {
-    const that = this;
-    return new Promise(((resolve) => {
+    return new Promise<void>((resolve) => {
       Modal.confirm({
         title: 'Delete',
         content: `Delete cookies under ${domain}`,
         okText: 'Yes',
         okType: 'danger',
         cancelText: 'No',
-        async onOk() {
+        onOk: async () => {
           await auto.remove(domain);
-          const domainList = await gist.remove(domain, that.state.domainList);
+          const domainList = await gist.remove(domain, this.state.domainList);
           let currentDomain: string;
           if (domainList.length === 0) {
             currentDomain = getDomain(await chromeUtils.getCurrentTabUrl());
           } else {
             currentDomain = domainList[0];
           }
-          that.setState({
+          this.setState({
             currentDomain,
             domainList,
           });
@@ -90,7 +89,7 @@ class Popup extends Component<{}, State> {
           resolve();
         },
       });
-    }));
+    });
   }
 
   private handleDomainChange = async (domain: string) => {

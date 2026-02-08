@@ -3,7 +3,7 @@ export function getCurrentTabUrl(): Promise<string> {
     chrome.tabs.query({
       active: true,
       currentWindow: true,
-    }, (tabs) => resolve(tabs[0].url));
+    }, (tabs) => resolve(tabs?.[0]?.url || ''));
   });
 }
 
@@ -31,6 +31,7 @@ function cookies2SetDetails(cookies: chrome.cookies.Cookie[]): chrome.cookies.Se
       path: cookie.path,
       secure: cookie.secure,
       httpOnly: cookie.httpOnly,
+      sameSite: cookie.sameSite,
       storeId: cookie.storeId,
       url: buildUrl(cookie.secure, cookie.domain, cookie.path),
     };
@@ -46,7 +47,7 @@ function cookies2SetDetails(cookies: chrome.cookies.Cookie[]): chrome.cookies.Se
 
 function buildUrl(secure: boolean, domain: string, path: string): string {
   if (domain.startsWith('.')) {
-    domain = domain.substr(1);
+    domain = domain.substring(1);
   }
   return `http${secure ? 's' : ''}://${domain}${path}`;
 }

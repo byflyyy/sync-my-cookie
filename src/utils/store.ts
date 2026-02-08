@@ -85,6 +85,9 @@ export const auto = {
 
 let initialized = false;
 export const gist = {
+  reset() {
+    initialized = false;
+  },
   async init(): Promise<boolean> {
     if (initialized) {
       return true;

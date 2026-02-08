@@ -6,7 +6,7 @@ import { Modal } from 'antd';
 import { Button, Collapse, Icon, Input, message, Tooltip } from 'antd';
 
 import { KevastGist } from 'kevast-gist';
-import { setting } from '../../utils/store';
+import { gist, setting } from '../../utils/store';
 
 interface Prop {
   onSet: () => void;
@@ -195,10 +195,12 @@ class Setting extends Component<Prop, State> {
     } catch (err) {
       Modal.error({
         title: 'Fail',
-        content: err.message,
+        content: err instanceof Error ? err.message : String(err),
       });
+      this.setState({ loading: false });
       return;
     }
+    gist.reset();
     await new Promise((resolve) => chrome.storage.local.clear(resolve));
     await setting.set({
       token: this.state.token,

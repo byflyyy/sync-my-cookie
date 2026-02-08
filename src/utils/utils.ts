@@ -1,11 +1,14 @@
-import { parse } from 'url';
-
 export function getDomain(url: string): string {
-  const hostname =  parse(url).hostname || '';
+  let hostname = '';
+  try {
+    hostname = new URL(url).hostname;
+  } catch (_e) {
+    return '';
+  }
   const lastDot = hostname.lastIndexOf('.');
   const nextDot = hostname.lastIndexOf('.', lastDot - 1);
   if (nextDot !== -1) {
-    return hostname.substr(nextDot + 1);
+    return hostname.substring(nextDot + 1);
   } else {
     return hostname;
   }
